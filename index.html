@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Untuk Alika Araskia — Hadiah Ulang Tahun</title>
+<style>
+    .big-love svg {
+  opacity:0;
+  transform: scale(0.5);
+  transition: all 0.6s ease;
+}
+.show-love .big-love svg {
+  opacity:1;
+  transform: scale(1);
+}
+  :root{
+    --pink:#ff7eb3;
+    --blue:#6cc6ff;
+    --deep:#1a1b2e;
+    --text:#fff;
+    --accent:#ffd166;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color:var(--text);
+    background: linear-gradient(135deg, rgba(108,198,255,0.18), rgba(255,126,179,0.18)) fixed, radial-gradient(1200px 800px at 20% 10%, rgba(255,126,179,0.35), transparent 60%) fixed, radial-gradient(1200px 800px at 80% 90%, rgba(108,198,255,0.35), transparent 60%) fixed, var(--deep);
+    min-height:100vh;
+    overflow:hidden;
+  }
+
+  /* Decorative floating elements: stars, hearts, clouds */
+  .decor{
+    position:fixed; inset:0; pointer-events:none; overflow:hidden;
+  }
+  .star, .heart, .cloud {
+    position:absolute;
+    opacity:0.8;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+    animation: floatY var(--dur,12s) linear infinite, floatX var(--dx,8s) ease-in-out infinite;
+  }
+  .star{
+    width:8px; height:8px; background: radial-gradient(circle at 30% 30%, #fff, #ffe9a8 60%, transparent 70%);
+    border-radius:50%;
+  }
+  .heart{
+    width:14px; height:14px; background:
+      radial-gradient(10px 10px at 30% 30%, var(--pink), transparent 70%),
+      radial-gradient(10px 10px at 70% 30%, var(--pink), transparent 70%),
+      conic-gradient(from 225deg at 50% 50%, var(--pink) 0 90deg, transparent 90deg);
+    transform: rotate(45deg);
+  }
+  .cloud{
+    width:120px; height:70px;
+    background: radial-gradient(40px 40px at 30% 50%, #fff, #eaf6ff 60%, transparent 65%),
+                radial-gradient(50px 45px at 65% 50%, #fff, #fdeaff 60%, transparent 65%),
+                radial-gradient(35px 35px at 50% 70%, #fff, #eaf6ff 60%, transparent 65%);
+    opacity:0.2;
+  }
+  @keyframes floatY { 0%{transform:translateY(0)} 50%{transform:translateY(-20px)} 100%{transform:translateY(0)} }
+  @keyframes floatX { 0%{left: -10%} 100%{left:110%} }
+
+  /* App shell */
+  .app{
+    position:relative;
+    width:100%;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .card{
+    position:relative;
+    width:min(900px, 95vw);
+    height:min(600px, 80vh);
+    background: linear-gradient(135deg, rgba(108,198,255,0.45), rgba(255,126,179,0.45));
+    backdrop-filter: blur(8px) saturate(120%);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+
+  /* Header */
+  .header{
+    position:absolute; top:0; left:0; right:0;
+    padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15), transparent);
+  }
+  .title{
+    font-weight:700; letter-spacing:0.3px;
+  }
+  .progress{
+    font-size:13px; opacity:0.9;
+  }
+
+  /* Slides */
+  .slides{ position:absolute; inset:60px 0 70px 0; }
+  .slide{
+    position:absolute; inset:0; padding:24px;
+    display:none; overflow:auto;
+  }
+  .slide.active{ display:block; animation: fadeIn 450ms ease; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+
+  /* Nav bar */
+  .nav{
+    position:absolute; bottom:0; left:0; right:0;
+    padding:12px 18px; display:flex; gap:10px; align-items:center; justify-content:space-between;
+    background: linear-gradient(0deg, rgba(0,0,0,0.25), transparent);
+  }
+  .btn{
+    appearance:none; border:none; cursor:pointer;
+    padding:10px 16px; border-radius:16px;
+    color:#1d1d1f; font-weight:600; letter-spacing:0.2px;
+    background: linear-gradient(135deg, #fff, #ffe7f2);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+  }
+  .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,0.25); }
+  .btn:disabled{ opacity:0.55; cursor:not-allowed; }
+  .btn.primary{ background: linear-gradient(135deg, #ffe1f0, #d7f0ff); }
+
+  .section{
+    margin:12px 0 18px 0;
+    padding:14px 16px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.24), rgba(255,255,255,0.14));
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:16px;
+  }
+  h2{
+    margin:6px 0 12px 0; font-size:22px;
+  }
+  p{ line-height:1.6; }
+
+  .img-placeholder{
+    width:100%; min-height:160px;
+    border:2px dashed rgba(255,255,255,0.6);
+    border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; opacity:0.9; font-weight:600;
+    background: repeating-linear-gradient(135deg, rgba(255,255,255,0.08) 0 10px, rgba(255,255,255,0.12) 10px 20px);
+  }
+
+  /* Audio controls */
+  .audio-bar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .audio-title{ font-size:14px; opacity:0.9; }
+
+  /* Keypad lock */
+  .keypad{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; width:min(340px, 80%); margin:14px auto;
+  }
+  .key{
+    background: linear-gradient(135deg, #fff, #ffe6f1);
+    color:#333; border:none; border-radius:14px; padding:16px 0;
+    font-weight:700; font-size:18px; cursor:pointer;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); transition:transform 120ms ease;
+  }
+  .key:hover{ transform: translateY(-1px); }
+  .code-display{
+    text-align:center; font-weight:700; letter-spacing:4px; font-size:18px;
+    padding:10px 12px; background: rgba(255,255,255,0.2); border-radius:12px; width:min(340px, 80%); margin:0 auto;
+  }
+  .hint{ text-align:center; font-size:13px; opacity:0.85; }
+
+  /* Gift box */
+  .gift-wrap{
+    display:flex; align-items:center; justify-content:center; padding:16px; min-height:240px;
+  }
+  .gift{
+    width:180px; height:140px; position:relative; cursor:pointer;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.35));
+  }
+  .gift .box{
+    position:absolute; bottom:0; left:0; right:0; height:100px; border-radius:12px;
+    background: linear-gradient(135deg, var(--pink), #ffc2d6);
+  }
+  .gift .lid{
+    position:absolute; top:0; left:-6px; right:-6px; height:50px; border-radius:14px;
+    background: linear-gradient(135deg, var(--blue), #c7ecff);
+    transform-origin: left center; transition: transform 500ms ease;
+  }
+  .gift.open .lid{ transform: rotate(-22deg) translateY(-8px); }
+  .big-love{
+    position:absolute; inset:auto 0 0 0; margin:auto; width:0; height:0; opacity:0; pointer-events:none;
+    transition: opacity 600ms ease, transform 600ms ease, width 600ms ease, height 600ms ease;
+    transform: translateY(20px) scale(0.9);
+  }
+  .show-love .big-love{
+    width:260px; height:260px; opacity:1; transform: translateY(-10px) scale(1);
+  }
+  .heart-shape{
+    width:100%; height:100%; position:relative; transform: rotate(45deg);
+    background: radial-gradient(55% 55% at 28% 28%, #ff3e85, transparent 65%),
+                radial-gradient(55% 55% at 72% 28%, #ff3e85, transparent 65%),
+                conic-gradient(from 225deg at 50% 50%, #ff3e85 0 90deg, transparent 90deg);
+    filter: drop-shadow(0 12px 28px rgba(255,62,133,0.55));
+  }
+  .love-caption{
+    text-align:center; margin-top:14px; font-weight:700;
+  }
+
+  /* Choices */
+  .choices{ display:grid; gap:10px; grid-template-columns: 1fr; width:min(500px, 95%); }
+  .choice{
+    background: linear-gradient(135deg, #fff, #eaf6ff);
+    color:#222; border:none; border-radius:14px; padding:12px;
+    font-weight:700; cursor:pointer; box-shadow: 0 8px 18px rgba(0,0,0,0.22);
+  }
+
+  /* Teddy + letter */
+  .teddy-wrap{
+    display:flex; gap:18px; align-items:center; flex-wrap:wrap;
+  }
+  .teddy{
+    position:relative; width:220px; height:240px; margin:0 auto; cursor:pointer;
+  }
+  .t-head{
+    position:absolute; top:0; left:0; right:0; margin:auto; width:160px; height:120px; border-radius:50%;
+    background: radial-gradient(60% 60% at 40% 40%, #a4743b, #7a5126 65%);
+    box-shadow: inset 0 -10px 20px rgba(0,0,0,0.25), 0 8px 20px rgba(0,0,0,0.35);
+  }
+  .t-ear{ position:absolute; width:60px; height:60px; border-radius:50%; background: radial-gradient(60% 60% at 40% 40%, #a4743b, #7a5126 65%);}
+  .t-ear.left{ top: -10px; left: -10px; }
+  .t-ear.right{ top: -10px; right: -10px; }
+  .t-body{
+    position:absolute; bottom:0; left:0; right:0; margin:auto; width:200px; height:140px; border-radius:50%;
+    background: radial-gradient(60% 60% at 40% 40%, #a4743b, #7a5126 65%);
+    box-shadow: inset 0 -12px 24px rgba(0,0,0,0.24);
+  }
+  .letter{
+    flex:1; min-width:240px; background:#fff; color:#333; border-radius:14px; padding:12px 14px;
+    border:2px dashed #ffc2d6; max-height:180px; overflow:auto;
+    transform-origin: top left; transform: scaleY(0); transition: transform 450ms ease;
+  }
+  .letter.open{ transform: scaleY(1); }
+
+  /* Collage */
+  .collage{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
+  }
+  .frame{
+    border-radius:14px; overflow:hidden; border:2px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.15); position:relative; min-height:160px;
+  }
+  .caption{
+    position:absolute; bottom:6px; left:6px; right:6px;
+    background: rgba(0,0,0,0.35); color:#fff; padding:6px 8px; border-radius:10px; font-weight:700; text-align:center;
+  }
+  .img-slot{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#fff; }
+
+  /* Quiz */
+  .quiz{ display:grid; gap:14px; }
+  .q{
+    padding:12px; border-radius:12px; background: rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25);
+  }
+  .q-title{ font-weight:700; margin-bottom:8px; }
+  .q-options{ display:grid; gap:8px; }
+  .q-options button{ padding:10px; border-radius:12px; border:none; cursor:pointer; background:#fff; font-weight:600; }
+  .q-result{ margin-top:8px; font-weight:700; }
+
+  /* Feelings */
+  .feelings{ display:grid; gap:10px; width:min(500px, 95%); }
+
+  /* Flipbook */
+  .flip-wrap{
+    perspective: 1400px; display:flex; align-items:center; justify-content:center;
+  }
+  .flipbook{
+    position:relative; width:min(540px, 90%); height:300px; transform-style: preserve-3d;
+  }
+  .page{
+    position:absolute; top:0; left:0;
+    width:100%; height:100%;
+    background:#fff; color:#222; border-radius:14px; border:1px solid rgba(0,0,0,0.12);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    transform-origin: left center; transition: transform 650ms ease;
+    padding:16px;
+    backface-visibility: hidden;
+  }
+  .page:nth-child(odd){ background: #fff7fb; }
+  .page h3{ margin:8px 0 10px 0; }
+  .flip-controls{ margin-top:12px; display:flex; gap:10px; justify-content:center; }
+  .cake-slot{
+    margin-top:12px; border:2px dashed #ffc2d6; border-radius:12px; min-height:120px; display:flex; align-items:center; justify-content:center;
+  }
+
+  /* Helpers */
+  .center{ text-align:center; }
+  .muted{ opacity:0.85; }
+  .success{ color:#2ecc71; }
+  .error{ color:#ff4d6d; }
+</style>
+</head>
+<body>
+
+<!-- Ambient decor -->
+<div class="decor" id="decor"></div>
+
+<div class="app">
+  <div class="card">
+    <div class="header">
+      <div class="title">Untuk Alika Araskia 💖</div>
+      <div class="progress" id="progress">Slide 1/10</div>
+    </div>
+
+    <div class="slides">
+
+      <!-- Slide 1: Greeting + image + music -->
+      <section class="slide active" data-slide="1">
+        <h2>Halo, Alika Araskia ✨</h2>
+        <p>Cie cie ada yang ulang tahun—pantes aja dunia kaya lebih tenang gitu. Okee, play dulu yuk musiknya biar asik perjalanannya… ahaha letsgooo! 🎶</p>
+
+        <div class="section">
+          <div class="img-placeholder"> </p><img src="Stiker 49 (SFILE.MOBI).gif" alt="" srcset=""></div>
+        </div>
+
+    
+
+
+        <div class="section audio-bar">
+          <button class="btn primary" id="playMusic1">Play musik pembuka</button>
+          <button class="btn" id="pauseMusic1">Pause</button>
+          <span class="audio-title muted">ABOUT YOU 1975</span>
+          <audio id="music1">
+            <!-- TODO: ganti src dengan file musik kamu -->
+            <source src="aboume.mp3" type="audio/mpeg" />
+          </audio>
+        </div>
+      </section>
+
+      <!-- Slide 2: Lock & key keypad -->
+      <section class="slide" data-slide="2">
+        <h2>Lock & Key 🔐</h2>
+        <p class="center">CLUENYA TANGGAL DAN BULAN LAHIR KAMU</p>
+        <div class="section">
+          <div class="code-display" id="codeDisplay">____</div>
+          <div class="keypad" id="keypad">
+            <!-- Keys 1-9 -->
+          </div>
+          <p class="hint">Klik tombol angka. Jika benar, kamu akan lanjut otomatis.</p>
+          <div class="center">
+            <button class="btn" id="clearCode">Clear</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Gift box => big love -->
+      <section class="slide" data-slide="3">
+        <h2>Selamat ulang tahun! 🎁</h2>
+        <p>Di dalam kado ini ada sesuatu spesial. pencet garis birunya..</p>
+        <div class="section gift-wrap" id="giftArea">
+          <div class="gift" id="gift">
+            <div class="lid"></div>
+            <div class="box"></div>
+          </div>
+          <div class="big-love" id="bigLove">
+            <div class=""></div>
+            <div class="big-love">
+  <svg viewBox="0 0 32 29" width="260" height="260">
+    <path d="M23.6,0c-2.9,0-5.4,1.5-7.6,4.1C13.8,1.5,11.3,0,8.4,0C3.8,0,0,3.8,0,8.4
+             c0,9.1,16,20.6,16,20.6s16-11.5,16-20.6C32,3.8,28.2,0,23.6,0z"
+          fill="#ff3e85"/>
+  </svg>
+</div>
+          </div>
+        </div>
+        <p class="love-caption" id="loveCaption"></p>
+      </section>
+
+      <!-- Slide 4: Do you love me? gated -->
+      <section class="slide" data-slide="4">
+        <h2>Do you love me? 💌</h2>
+        <p>Pilih salah satu jawaban di bawah ya. Kamu baru bisa lanjut kalau pilih yang nomor 3.</p>
+
+        <div class="section">
+          <div class="choices" id="loveChoices">
+            <button class="choice" data-choice="1">1) iyaa cinta</button>
+            <button class="choice" data-choice="2">2) iyaa aku cinta kamu</button>
+            <button class="choice" data-choice="3">3) IYAA SAYANGKUUUU AKU CINTAA KAMU PAKE BANGETTT</button>
+          </div>
+          <p id="loveGateResult" class="center muted" style="margin-top:10px;"></p>
+        </div>
+
+        <div class="section">
+          <div class="img-placeholder"> </p><img src="Stiker 20 (SFILE.MOBI).gif" alt="" srcset=""></div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Teddy bear head to open letter -->
+      <section class="slide" data-slide="5">
+        <h2>Surat untuk kamu 🐻💖</h2>
+        <p>HEYY AKU ADA SURAT BUAT WANITA HEBAT KAYA KAMU. Pegang (klik) kepala boneka beruang supaya suratnya kebuka.</p>
+
+        <div class="section teddy-wrap">
+          <div class="teddy" id="teddy">
+            <div class="t-head" id="tHead">
+              <div class="t-ear left"></div>
+              <div class="t-ear right"></div>
+            </div>
+            <div class="t-body"></div>
+          </div>
+
+          <div class="letter" id="letter">
+            <!-- TODO: isi teks panjang romantis kamu -->
+            <h3>Untuk Alika ARASKIA</h3>
+            <p>
+              SELAMAT ULANG TAHUN SAYANGKUU CINTAKUU CANTIKKU MANISKUU, semoga kamu diberi umur panjang, sehat selalu dan
+              bahagia selalu yahh.Di usia mu yang semakin dewasa ini, aku berdoa supaya kamu jadi wanita hebat, kuat,
+              dan pantang menyerah.Capai semua mimpi dan cita cita kamu, kamu pasti bisaa, aku adalah orang yang selalu
+              bangga atas apapun pencapaian mu, aku akan selalu support kamu, kalo kamu lelah ingat aku yahh, aku 
+              bakal jadi rumah yang baik untukmuu, akuu adalah orang yang ga akan pernah rela liat kamu sedih, jadi aku 
+              harap senyum dan tawamu selalu mengikuti mu yahh.
+            </p>
+            <p>
+              Hal yang harus kamu tahu, bahwa aku sangat mencintai dan menyanyangimuu, rasa cintaku ke kamu terlalu besar
+              bahkan alat ukur apapun ga mampu mengukur cintaku ke kamu, kamu adalah orang yang mampu membuatku jatuh cinta
+              berkali kali, bahkan saat aku gamau jatuh cinta.Kamu hadir di hidupku sebagai sosok yang berharga buatku.
+              Jangan pernah lupain aku yah, aku sedih kalo nantinya kamu bakal lupa sama aku, tolong kenal aku sebagai laki
+              laki baik yang pernah hadir dalam hidupmu.AKU BAKAL TERUS CINTA DAN SAYANG SAMA KAMU, HARI INI DAN SETERUSNYA.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: 3-photo collage with captions -->
+      <section class="slide" data-slide="6">
+        <h2>Kolase untuk kamu 📸</h2>
+        <p>ALIKA ARASKIA, ketika aku mendengar nama itu langsung terlintas bahwa itu adalah seorang wanita
+            yang pernah ku kenal sebagai wanita yang bahkan otakku sulit mendeskripsikannya, bahkan kata cantik, baik,
+            lucu, apapun itu, ga mampu menjelaskan betapa indah dan istimewa nya dirimuuu bagikuuu.
+        </p>
+        <div class="section collage">
+          <div class="frame">
+            <div class="img-slot"></p><img src="alika 3.jpg" alt="" srcset=""></div>
+            <div class="caption"></div>
+          </div>
+          <div class="frame">
+            <div class="img-slot"> </p><img src="alika 4.jpg" alt="" srcset=""></div>
+            <div class="caption"></div>
+          </div>
+          <div class="frame">
+            <div class="img-slot"></p><img src="alika.jpg" alt="" srcset=""></div>
+            <div class="caption"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Quiz 3 questions -->
+      <section class="slide" data-slide="7">
+        <h2>Tebak-tebakan tentang Alika 🧠</h2>
+        <p>Jawab 3 pertanyaan kecil ini. Ada cek benar/salah tiap pilihan.</p>
+
+        <div class="section quiz">
+          <div class="q" data-q="1">
+            <div class="q-title">1) Apa minuman kesukaan Alika?</div>
+            <div class="q-options">
+              <button data-a="teh">teh</button>
+              <button data-a="kopi">Kopi</button>
+              <button data-a="susu">kuah seblak</button>
+            </div>
+            <div class="q-result" id="q1res"></div>
+          </div>
+
+          <div class="q" data-q="2">
+            <div class="q-title">2) Apa kegiatan yang sering Alika lakukan di siang hari?</div>
+            <div class="q-options">
+              <button data-a="belajar">Belajar</button>
+              <button data-a="tidur">Tidur</button>
+              <button data-a="olahraga">olahraga</button>
+            </div>
+            <div class="q-result" id="q2res"></div>
+          </div>
+
+          <div class="q" data-q="3">
+            <div class="q-title">3) Apa warna kesukaan Alika?</div>
+            <div class="q-options">
+              <button data-a="biru">kuning</button>
+              <button data-a="ungu">Ungu</button>
+              <button data-a="pink">Pink</button>
+            </div>
+            <div class="q-result" id="q3res"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Feelings percent gated -->
+      <section class="slide" data-slide="8">
+        <h2>Seberapa besar perasaan Malik ke Alika? 💘</h2>
+        <p>JANGAN TERLALU DI INIIN, APASIH NAMANYAA</p>
+
+        <div class="section feelings" id="feelings">
+          <button class="choice" data-feel="0">ADALAH POKONYA</button>
+          <button class="choice" data-feel="100">100%</button>
+          <button class="choice" data-feel="∞">Tak terhingga</button>
+        </div>
+        <p id="feelingsRes" class="center muted"></p>
+
+        <div class="section">
+          <div class="img-placeholder"></p><img src="Stiker 12 (SFILE.MOBI).gif" alt="" srcset=""></div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Music #2, auto stop music #1 -->
+      <section class="slide" data-slide="9">
+        <h2>LANY DULU GASIH BRAY?? 🎼</h2>
+        <p>GA ASIK YEKAN KALO GA LANY AHAHAHAHA</p>
+
+        <div class="section audio-bar">
+          <button class="btn primary" id="playMusic2">Play musik #2</button>
+          <button class="btn" id="pauseMusic2">Pause</button>
+          <span class="audio-title muted">Musik #2</span>
+          <audio id="music2">
+            <!-- TODO: ganti src dengan musik #2 -->
+            <source src="lany2.mp3" type="audio/mpeg" />
+          </audio>
+        </div>
+      </section>
+
+      <!-- Slide 10: Flipbook + birthday wish + cake -->
+      <section class="slide" data-slide="10">
+        <h2>Ucapan penutup 🎂</h2>
+        <p>Selamat ulang tahun, sehat selalu, AKU SELALU CINTA DAN SAYANG SAMA KAMU, Ini flipbook DARI AKU BUAT KAMU TOLONG DIBACA YAH dan juga di bawah ada foto gemes kitaa</p>
+
+        <div class="section flip-wrap">
+          <div class="flipbook" id="flipbook">
+            <!-- 6 pages -->
+          </p>
+            <div class="page" data-page="1"><h3>Lembar 1</h3><p>"INDAH HANYALAH KATA, KAMU WUJUDNYA."
+
+            
+
+            </p></div>
+            <div class="page" data-page="2"><h3>Lembar 2</h3><p>KEINDAHAN ITU RUPA RUPA YA BENTUKNYA?
+                LANGIT, GUNUNG, PANTAI, ALIKA ARASKIA.
+
+
+            
+            </p></div>
+            <div class="page" data-page="3"><h3>Lembar 3</h3><p>JIKA HIDUP SEPERTI SEBUAH BUKU, MAKA BERTEMU DENGAN MU ADALAH BAB FAVORITKUU.</p></div>
+            <div class="page" data-page="4"><h3>Lembar 4</h3><p>ALIKA, MALIK MINTA MAAF YAH CUMA BISA KASIH KASIH INI, MALIK GADA UANG BUAT BELI SESEUATU YANG LEBIH BESAR DARI INI, TAPI INI MALIK BUAT DENGAN NGODING SELAMA 7 HARI 7 MALAM, BAHKAN SAAT KITA MARAHAN PUN AKU BUAT INI DENGAN PENUH CINTA DAN KASIH SAYANG, AKU SENENG BISA BIKIN INI BUAT KAMUU, SEKALI LAGI MAAF YAHHH</p></div>
+            <div class="page" data-page="5"><h3>Lembar 5</h3><p>BAGIAN SERU DARI KOMUNIKASI BUKAN PADA TOPIKNYA, TAPI LAWAN BICARANYA.</p></div>
+            <div class="page" data-page="6"><h3>Lembar 6</h3><p>I REMEMBER THE DAY WE FIRST MET, 
+                I REMEMBER THE WAY EVERYTHING AROUND ME WENT SILENT, I REMEMBER HOW IT FELT LIKE TIME DIDN'T EXIST FOR AWHILE BECAUSE OF HOW WE SPOKE AS IF WE ALREADY KNEW EACH OTHER.
+            </p></div>
+          </div>
+        </div>
+
+        <div class="flip-controls">
+          <button class="btn" id="prevPage">Flip kembali</button>
+          <button class="btn primary" id="nextPage">Flip lanjut</button>
+        </div>
+
+        <div class="section cake-slot"> </p><img src="alika 2.jpg" alt="" srcset=""></div>
+      </section>
+
+    </div>
+
+    <!-- Nav -->
+    <div class="nav">
+      <button class="btn" id="backBtn">Back</button>
+      <div class="muted">Navigasi</div>
+      <button class="btn primary" id="nextBtn">Next</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Floating decor creation
+  const decor = document.getElementById('decor');
+  const rand = (min,max)=>Math.random()*(max-min)+min;
+  for(let i=0;i<50;i++){
+    const s = document.createElement('div');
+    s.className = Math.random()>0.66 ? 'heart' : (Math.random()>0.5 ? 'star' : 'cloud');
+    s.style.top = rand(-10, 100) + '%';
+    s.style.left = rand(-10, 110) + '%';
+    s.style.setProperty('--dur', rand(10,18)+'s');
+    s.style.setProperty('--dx', rand(6,14)+'s');
+    if(s.className==='cloud'){ s.style.top = rand(0,80)+'%'; s.style.opacity = 0.15 + Math.random()*0.2; }
+    decor.appendChild(s);
+  }
+
+  // Slide handling
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let current = 0; // index in slides array
+  const progressEl = document.getElementById('progress');
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function showSlide(idx){
+    // bounds
+    if(idx<0) idx=0;
+    if(idx>slides.length-1) idx=slides.length-1;
+
+    // Audio logic: entering slide 9 or 10 stops music1
+    const enteringSlideNum = parseInt(slides[idx].dataset.slide,10);
+    if(enteringSlideNum>=9){
+      const m1 = document.getElementById('music1');
+      if(m1) { try{ m1.pause(); m1.currentTime = 0; }catch(e){} }
+    }
+
+    // Update active slide
+    slides.forEach(s=>s.classList.remove('active'));
+    slides[idx].classList.add('active');
+    current = idx;
+
+    // Progress text
+    const num = slides[current].dataset.slide;
+    progressEl.textContent = `Slide ${num}/10`;
+
+    // Nav buttons
+    backBtn.disabled = (current===0);
+    nextBtn.disabled = false;
+
+    // Apply gating rules
+    applyGates();
+  }
+
+  function applyGates(){
+    const num = parseInt(slides[current].dataset.slide,10);
+    // Gate slide 2: require correct code 3112 to go next
+    if(num===2){
+      nextBtn.disabled = true;
+    }
+    // Gate slide 4: require choice 3
+    if(num===4){
+      const ok = loveChoiceOK;
+      nextBtn.disabled = !ok;
+    }
+    // Gate slide 8: require "Tak terhingga"
+    if(num===8){
+      const ok = feelingsOK;
+      nextBtn.disabled = !ok;
+    }
+  }
+
+  backBtn.addEventListener('click', ()=> showSlide(current-1));
+  nextBtn.addEventListener('click', ()=> showSlide(current+1));
+
+  // Music #1 controls
+  const music1 = document.getElementById('music1');
+  document.getElementById('playMusic1').addEventListener('click', ()=> { try{ music1.play(); }catch(e){} });
+  document.getElementById('pauseMusic1').addEventListener('click', ()=> { try{ music1.pause(); }catch(e){} });
+
+  // Music #2 controls
+  const music2 = document.getElementById('music2');
+  document.getElementById('playMusic2').addEventListener('click', ()=> { 
+    try{ music2.play(); }catch(e){}
+  });
+  document.getElementById('pauseMusic2').addEventListener('click', ()=> { 
+    try{ music2.pause(); }catch(e){}
+  });
+
+  // Keypad logic (slide 2)
+  const keypad = document.getElementById('keypad');
+  const codeDisplay = document.getElementById('codeDisplay');
+  const clearCodeBtn = document.getElementById('clearCode');
+  let codeEntered = '';
+
+  function renderKeypad(){
+    const frag = document.createDocumentFragment();
+    for(let n=1;n<=9;n++){
+      const b = document.createElement('button');
+      b.className='key'; b.textContent = n;
+      b.addEventListener('click', ()=> appendDigit(n));
+      frag.appendChild(b);
+    }
+    const zero = document.createElement('button');
+    zero.className='key'; zero.textContent='0';
+    zero.addEventListener('click', ()=> appendDigit(0));
+    const backspace = document.createElement('button');
+    backspace.className='key'; backspace.textContent='←';
+    backspace.addEventListener('click', ()=> { codeEntered = codeEntered.slice(0,-1); updateCodeDisplay(); });
+    const enter = document.createElement('button');
+    enter.className='key'; enter.textContent='✓';
+    enter.addEventListener('click', checkCode);
+    frag.appendChild(zero); frag.appendChild(backspace); frag.appendChild(enter);
+    keypad.appendChild(frag);
+  }
+  renderKeypad();
+
+  function appendDigit(d){
+    if(codeEntered.length>=4) return;
+    codeEntered += String(d);
+    updateCodeDisplay();
+    if(codeEntered.length===4) checkCode();
+  }
+  function updateCodeDisplay(){
+    codeDisplay.textContent = (codeEntered.padEnd(4,'_')).replace(/./g,(ch)=> ch);
+  }
+  function checkCode(){
+    if(codeEntered==='3112'){
+      codeDisplay.textContent = '✔✔✔✔';
+      nextBtn.disabled = false;
+      // Auto advance on success
+      setTimeout(()=> showSlide(current+1), 500);
+    }else{
+      codeDisplay.textContent = '✖✖✖✖';
+      nextBtn.disabled = true;
+    }
+  }
+  clearCodeBtn.addEventListener('click', ()=> { codeEntered=''; updateCodeDisplay(); nextBtn.disabled=true; });
+
+  // Gift logic (slide 3)
+  const gift = document.getElementById('gift');
+  const bigLove = document.getElementById('bigLove');
+  const loveCaption = document.getElementById('loveCaption');
+  gift.addEventListener('click', ()=>{
+    gift.classList.add('open');
+    gift.closest('.slide').classList.add('show-love');
+    loveCaption.textContent = 'Love buat kamu, wanita hebat 💖';
+  });
+
+  // Love choices (slide 4)
+  let loveChoiceOK = false;
+  const loveChoices = document.getElementById('loveChoices');
+  const loveGateResult = document.getElementById('loveGateResult');
+  loveChoices.addEventListener('click', (e)=>{
+    if(e.target.matches('.choice')){
+      const val = e.target.dataset.choice;
+      if(val==='3'){
+        loveChoiceOK = true;
+        loveGateResult.textContent = 'Jawaban tepat! Kamu boleh lanjut.';
+        loveGateResult.className = 'center success';
+      }else{
+        loveChoiceOK = false;
+        loveGateResult.textContent = 'Eits, pilih yang nomor 3 dulu ya 😉';
+        loveGateResult.className = 'center error';
+      }
+      applyGates();
+    }
+  });
+
+  // Teddy letter (slide 5)
+  const tHead = document.getElementById('tHead');
+  const letter = document.getElementById('letter');
+  tHead.addEventListener('click', ()=>{
+    letter.classList.toggle('open');
+  });
+
+  // Quiz (slide 7)
+  const q1res = document.getElementById('q1res');
+  const q2res = document.getElementById('q2res');
+  const q3res = document.getElementById('q3res');
+
+  document.querySelectorAll('.q').forEach(q=>{
+    q.addEventListener('click', (e)=>{
+      if(e.target.tagName==='BUTTON'){
+        const qid = q.dataset.q;
+        const ans = e.target.dataset.a;
+        if(qid==='1'){
+          if(ans==='kopi'){ q1res.textContent='Benar!'; q1res.className='q-result success'; }
+          else { q1res.textContent='Salah, coba lagi.'; q1res.className='q-result error'; }
+        }else if(qid==='2'){
+          if(ans==='tidur'){ q2res.textContent='Benar!'; q2res.className='q-result success'; }
+          else { q2res.textContent='Kurang tepat.'; q2res.className='q-result error'; }
+        }else if(qid==='3'){
+          if(ans==='pink'){ q3res.textContent='Betul banget!'; q3res.className='q-result success'; }
+          else { q3res.textContent='Hmm, coba lagi ya.'; q3res.className='q-result error'; }
+        }
+      }
+    });
+  });
+
+  // Feelings gate (slide 8)
+  let feelingsOK = false;
+  const feelings = document.getElementById('feelings');
+  const feelingsRes = document.getElementById('feelingsRes');
+  feelings.addEventListener('click', (e)=>{
+    if(e.target.matches('.choice')){
+      const v = e.target.dataset.feel;
+      if(v==='∞'){
+        feelingsOK = true;
+        feelingsRes.textContent = 'Yesss! Tak terhingga 💫 Kamu boleh lanjut.';
+        feelingsRes.className = 'center success';
+      }else{
+        feelingsOK = false;
+        feelingsRes.textContent = 'Belum tepat. Coba cari yang paling besar…';
+        feelingsRes.className = 'center error';
+      }
+      applyGates();
+    }
+  });
+
+  // Flipbook (slide 10)
+  const flipbook = document.getElementById('flipbook');
+  const pages = Array.from(flipbook.querySelectorAll('.page'));
+  let pageIndex = 0; // 0..5
+  function renderFlip(){
+    pages.forEach((pg,i)=>{
+      const turned = (i<=pageIndex);
+      pg.style.transform = turned ? 'rotateY(-180deg)' : 'rotateY(0deg)';
+      pg.style.zIndex = pages.length - i; // keep stacking
+    });
+  }
+  renderFlip();
+
+  document.getElementById('nextPage').addEventListener('click', ()=>{
+    pageIndex = Math.min(pageIndex+1, pages.length-1);
+    renderFlip();
+  });
+  document.getElementById('prevPage').addEventListener('click', ()=>{
+    pageIndex = Math.max(pageIndex-1, 0);
+    renderFlip();
+  });
+
+  // Initialize
+  showSlide(0);
+</script>
+</body>
+</html>
